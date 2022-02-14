@@ -8,11 +8,11 @@ services:
       - PRESTASHOP_LAST_NAME=${PRESTASHOP_LAST_NAME}
       - PRESTASHOP_PASSWORD=${PRESTASHOP_PASSWORD}
       - PRESTASHOP_EMAIL=${PRESTASHOP_EMAIL}
-      - PRESTASHOP_HOST=${PRESTASHOP_HOST}
-      - PRESTASHOP_ENABLE_HTTPS=${PRESTASHOP_ENABLE_HTTPS}
       - PRESTASHOP_COUNTRY=${PRESTASHOP_COUNTRY}
       - PRESTASHOP_LANGUAGE=${PRESTASHOP_LANGUAGE}
       - PRESTASHOP_DATABASE_HOST=${PRESTASHOP_DATABASE_HOST}
+      - PRESTASHOP_HOST=${PRESTASHOP_HOST}
+      - PRESTASHOP_ENABLE_HTTPS=${PRESTASHOP_ENABLE_HTTPS}
       - PRESTASHOP_DATABASE_NAME=${MYSQL_DATABASE}
       - PRESTASHOP_DATABASE_USER=${MYSQL_USER}
       - PRESTASHOP_DATABASE_PASSWORD=${MYSQL_PASSWORD}
@@ -20,7 +20,7 @@ services:
     volumes:
       - prestashop_data:/bitnami/prestashop
     depends_on:
-      - mysql
+      - mariadb
     networks:
       - frontend_network
       - backend_network
@@ -34,7 +34,7 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     restart: always
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     networks:
       - backend_network
     security_opt:
@@ -46,9 +46,9 @@ services:
     ports:
       - 8080:80
     environment:
-      - PMA_HOST=mysql
+      - PMA_HOST=mariadb
     depends_on:
-      - mysql
+      - mariadb
     networks:
       - frontend_network
       - backend_network
@@ -60,7 +60,7 @@ services:
       - 443:443
     environment:
       #DOMAINS: 'localhost -> http://prestashop:80 #local'
-      DOMAINS: 'prestashop-iaw.ddns.net -> http://prestashop:8080 #production'
+      DOMAINS: 'iaw-test.ddns.net -> http://prestashop:8080 #production'
     volumes:
       - ssl_certs_data:/var/lib/https-portal
     depends_on:
@@ -71,7 +71,7 @@ services:
 
 volumes:
   prestashop_data:
-  mysql_data:
+  mariadb_data:
   ssl_certs_data:
 
 networks:
